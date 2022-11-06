@@ -1,7 +1,11 @@
 [package]
 name = "ruts"
+authors = ["Ethan Holz"]
 version = "0.1.0"
 edition = "2021"
+license = "MIT"
+readme = "README.md"
+description = "A Rust-based TMUX session manager"
 
 [[bin]]
 name = "ruts"
