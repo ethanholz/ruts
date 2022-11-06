@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build
+      run: cargo build --verbose
+    - name: Run tests
+      run: cargo test --verbose
+  amd64deb:
+    needs: [build]
+    name: Amd64Deb
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Deb Build
+      uses: ebbflow-io/cargo-deb-amd64-ubuntu@1.0
+    - name: Upload Deb Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: amd64deb
+        path: ./target/x86_64-unknown-linux-musl/debian/*
