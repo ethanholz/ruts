@@ -22,8 +22,11 @@ jobs:
       run: cargo test --verbose
     - name: Build deb
       run: cargo deb
-    - name: Upload release
-      uses: actions/upload-artifact@v2
+    - name: Upload binaries to release
+      uses: svenstaro/upload-release-action@v2
       with:
-        name: amd64deb
-        path: ./target/debian/*.deb
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: ./target/debian/*.deb
+        asset_name: ruts
+        tag: ${{ github.ref }}
+        overwrite: true
