@@ -1,0 +1,12 @@
+workspaces:
+- name: work
+  windows:
+  - name: code
+    dir: ~/Documents/cool-code
+    command: /bin/bash
+- name: home
+  windows:
+    - name: code
+      dir: ~/Documents/other-cool-code/1
+    - name: code2
+      dir: ~/Documents/other-cool-code/2
