@@ -44,7 +44,7 @@ fn send_command(window: &Window, tmux: TmuxCommand) -> Result<TmuxOutput, Error>
 fn main() {
     let cli = Cli::parse();
     let home = env::var("HOME").unwrap();
-    let config_home = format!("{}/.config/rut/rut.yaml", home);
+    let config_home = format!("{}/.config/ruts/ruts.yaml", home);
     let file = cli.file.as_deref().unwrap_or(&config_home);
     let data = std::fs::read_to_string(file).expect("Error reading");
     let decoded: RutConfig = serde_yaml::from_str(&data).unwrap();
