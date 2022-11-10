@@ -1,4 +1,5 @@
 mod config;
+use std::collections::HashSet;
 use std::env;
 use std::io;
 use std::process;
@@ -43,7 +44,11 @@ struct SessionCommand {
 }
 
 #[derive(Args, PartialEq)]
-struct List {}
+struct List {
+    #[arg(long)]
+    /// Get a list of all running sessions from your config
+    running: bool,
+}
 
 fn send_command(window: &Window, tmux: TmuxCommand) -> Result<TmuxOutput, Error> {
     let command = match &window.command {
@@ -83,9 +88,24 @@ fn main() {
     let decoded: RutConfig = serde_yaml::from_str(&data).unwrap();
     let workspaces = decoded.workspaces.as_ref().unwrap();
     match &cli.command.unwrap() {
-        Commands::List(..) => {
-            for workspace in workspaces {
-                println!("{}", workspace.name);
+        Commands::List(list) => {
+            if list.running {
+                // Create hash sets of the workspaces and the sessions
+                let workspace_names: HashSet<String> =
+                    workspaces.iter().map(|w| w.name.clone()).collect();
+                let sessions: HashSet<String> = Sessions::get(SESSION_ALL)
+                    .unwrap()
+                    .into_iter()
+                    .map(|session| session.name.unwrap().clone())
+                    .collect();
+                // Find the intersection and print them out
+                for workspace in workspace_names.intersection(&sessions) {
+                    println!("{}", workspace);
+                }
+            } else {
+                for workspace in workspaces {
+                    println!("{}", workspace.name);
+                }
             }
             process::exit(0);
         }
