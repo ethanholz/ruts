@@ -99,24 +99,12 @@ fn main() {
             {
                 Some(session) => {
                     let name = session.name.unwrap();
-                    tmux.attach_session().target_session(name);
+                    tmux.attach_session().target_session(name).output().unwrap();
                 }
                 None => {
                     println!("Workspace \"{}\", not found.", item);
                     process::exit(1);
                 }
-            }
-
-            match workspaces.iter().find(|i| i.name == *item) {
-                Some(workspace) => {
-                    let tmux = TmuxCommand::new();
-                    let workspace_name = &workspace.name;
-                    tmux.attach_session()
-                        .target_session(workspace_name)
-                        .output()
-                        .unwrap();
-                }
-                None => {}
             }
         }
         Commands::Start(start) => {
