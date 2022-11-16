@@ -1,6 +1,12 @@
 # RUTS
 A Rust-based tmux sessionizer
 
+## Installation
+Currently you can install this package by either compiling from source or from the AUR.
+
+### AUR
+`yay -S ruts-bin`
+
 ## Usage 
 ruts [OPTIONS] [COMMAND]
 

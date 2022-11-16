@@ -6,6 +6,8 @@ edition = "2021"
 license = "MIT"
 readme = "README.md"
 description = "A Rust-based TMUX session manager"
+homepage = "https://github.com/ethanholz/ruts"
+repository = "https://github.com/ethanholz/ruts"
 
 [[bin]]
 name = "ruts"
