@@ -24,6 +24,7 @@ struct Cli {
     file: Option<String>,
     #[command(subcommand)]
     command: Option<Commands>,
+    // Generates a shell config
     #[arg(long = "generate", value_enum)]
     generator: Option<Shell>,
 }
