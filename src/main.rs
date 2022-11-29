@@ -24,7 +24,7 @@ struct Cli {
     file: Option<String>,
     #[command(subcommand)]
     command: Option<Commands>,
-    // Generates a shell config
+    // Generates shell completion
     #[arg(long = "generate", value_enum)]
     generator: Option<Shell>,
 }
@@ -90,22 +90,28 @@ fn main() {
     let workspaces = decoded.workspaces.as_ref().unwrap();
     match &cli.command.unwrap() {
         Commands::List(list) => {
+            // Create hash sets of the workspaces and the sessions
+            let workspace_names: HashSet<String> =
+                workspaces.iter().map(|w| w.name.clone()).collect();
+            let sessions: HashSet<String> = Sessions::get(SESSION_ALL)
+                .unwrap()
+                .into_iter()
+                .map(|session| session.name.unwrap().clone())
+                .collect();
+            let intersect = workspace_names.intersection(&sessions);
+            // Find the intersection and print them out if running
             if list.running {
-                // Create hash sets of the workspaces and the sessions
-                let workspace_names: HashSet<String> =
-                    workspaces.iter().map(|w| w.name.clone()).collect();
-                let sessions: HashSet<String> = Sessions::get(SESSION_ALL)
-                    .unwrap()
-                    .into_iter()
-                    .map(|session| session.name.unwrap().clone())
-                    .collect();
-                // Find the intersection and print them out
-                for workspace in workspace_names.intersection(&sessions) {
+                for workspace in intersect {
                     println!("{}", workspace);
                 }
             } else {
+                let vec_test: Vec<&String> = intersect.collect();
                 for workspace in workspaces {
-                    println!("{}", workspace.name);
+                    if vec_test.contains(&&workspace.name) {
+                        println!("*{}", workspace.name);
+                    } else {
+                        println!("{}", workspace.name);
+                    }
                 }
             }
             process::exit(0);
